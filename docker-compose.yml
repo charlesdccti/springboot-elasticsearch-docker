@@ -1,0 +1,31 @@
+version: '2'
+
+services:
+  myelasticsearch:
+    container_name: elasticsearch
+    build: ./docker/images/elasticsearch
+    image: elasticsearch:6.5.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+  springboot-elasticsearch:
+    build:
+      context: .
+      dockerfile: Dockerfile-Springboot-Elasticsearch
+    entrypoint: /opt/bin/Springboot-Elasticsearch-entrypoint.sh
+    image: springboot-elasticsearch:latest
+    environment:
+      - SERVER_PORT=8080
+      - ELASTICSEARCH_CLUSTER_NAME=docker-cluster
+      - ELASTICSEARCH_CLUSTER_NODE=myelasticsearch:9300
+      - ELASTICSEARCH_REPOSITORIES_ENABLE=true
+      - ELASTICSEARCH_STATUS_HOST=myelasticsearch
+      - ELASTICSEARCH_STATUS_PORT=9300
+    ports:
+      - 8080:8080
+    command: mvn clean spring-boot:run
+    links:
+      - myelasticsearch:myelasticsearch
+    depends_on:
+      - myelasticsearch
+      

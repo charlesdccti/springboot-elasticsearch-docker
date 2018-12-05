@@ -1,0 +1,6 @@
+FROM alpine-jdk:base
+MAINTAINER volkswagen
+COPY target/springboot-elasticsearch-0.0.1-SNAPSHOT.jar /opt/lib/
+COPY shell/Springboot-Elasticsearch-entrypoint.sh /opt/bin/Springboot-Elasticsearch-entrypoint.sh
+RUN chmod 755 /opt/bin/Springboot-Elasticsearch-entrypoint.sh
+EXPOSE 8080
